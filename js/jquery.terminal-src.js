@@ -778,66 +778,8 @@
     // :: Serialize object myself (biwascheme or prototype library do something
     // :: wicked with JSON serialization for Arrays)
     // -------------------------------------------------------------------------
-    $.json_stringify = function(object, level) {
-        var result = '', i;
-        level = level === undefined ? 1 : level;
-        var type = typeof object;
-        switch (type) {
-            case 'function':
-                result += object;
-                break;
-            case 'boolean':
-                result += object ? 'true' : 'false';
-                break;
-            case 'object':
-                if (object === null) {
-                    result += 'null';
-                } else if (object instanceof Array) {
-                    result += '[';
-                    var len = object.length;
-                    for (i = 0; i < len - 1; ++i) {
-                        result += $.json_stringify(object[i], level + 1);
-                    }
-                    result += $.json_stringify(object[len - 1], level + 1) + ']';
-                } else {
-                    result += '{';
-                    for (var property in object) {
-                        if (object.hasOwnProperty(property)) {
-                            result += '"' + property + '":' +
-                                $.json_stringify(object[property], level + 1);
-                        }
-                    }
-                    result += '}';
-                }
-                break;
-            case 'string':
-                var str = object;
-                var repl = {
-                    '\\\\': '\\\\',
-                    '"': '\\"',
-                    '/': '\\/',
-                    '\\n': '\\n',
-                    '\\r': '\\r',
-                    '\\t': '\\t'};
-                for (i in repl) {
-                    if (repl.hasOwnProperty(i)) {
-                        str = str.replace(new RegExp(i, 'g'), repl[i]);
-                    }
-                }
-                result += '"' + str + '"';
-                break;
-            case 'number':
-                result += String(object);
-                break;
-        }
-        result += (level > 1 ? ',' : '');
-        // quick hacks below
-        if (level === 1) {
-            // fix last comma
-            result = result.replace(/,([\]}])/g, '$1');
-        }
-        // fix comma before array or object
-        return result.replace(/([\[{]),/g, '$1');
+    $.json_stringify = function(object) {
+        return JSON.stringify(object);
     };
     // -------------------------------------------------------------------------
     // :: HISTORY CLASS
